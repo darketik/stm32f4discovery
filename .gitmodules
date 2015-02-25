@@ -1,0 +1,3 @@
+[submodule "libstm32f4"]
+	path = libstm32f4
+	url = https://github.com/darketik/libstm32f4.git
