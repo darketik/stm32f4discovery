@@ -31,12 +31,10 @@ F_CRYSTAL      			= 8000000L
 #+ APPLICATION    			= FALSE
 
 # Packages to build
-TARGET         			= semihosting_template
-PACKAGES						= semihosting_template
+TARGET         			= swo_itm_printf_template
+PACKAGES						= swo_itm_printf_template
 
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
-
-SEMIHOST							= enable
 
 include libstm32f4/makefile.inc
