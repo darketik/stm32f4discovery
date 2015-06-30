@@ -25,68 +25,186 @@
 // -----------------------------------------------------------------------------
 //
 // API Driver for lcd 16x4 display.
+//
 
-/** LCD Cursor control */
-typedef enum  {
-		CUROFF_BLKOFF = 0x00,  /**<  Cursor Off, Blinking Char Off */    
-		CURON_BLKOFF  = 0x02,  /**<  Cursor On, Blinking Char Off */    
-		CUROFF_BLKON  = 0x01,  /**<  Cursor Off, Blinking Char On */    
-		CURON_BLKON   = 0x03   /**<  Cursor On, Blinking Char On */    
-} lcd_cursorstate_t;
+#include "lcd16x2_api.h"
 
-/** LCD Display control */
-typedef enum {
-		DISPOFF = 0x00,  /**<  Display Off */    
-		DISPON  = 0x04   /**<  Display On */            
-} lcd_displaystate_t;
+//+ /** LCD Cursor control */
+//+ typedef enum  {
+//+     CUROFF_BLKOFF = 0x00,  /**<  Cursor Off, Blinking Char Off */    
+//+     CURON_BLKOFF  = 0x02,  /**<  Cursor On, Blinking Char Off */    
+//+     CUROFF_BLKON  = 0x01,  /**<  Cursor Off, Blinking Char On */    
+//+     CURON_BLKON   = 0x03   /**<  Cursor On, Blinking Char On */    
+//+ } lcd_cursorstate_t;
 
-/** LCD Backlight control */
-typedef enum {
-		LIGHTOFF,        /**<  Backlight Off */    
-		LIGHTON          /**<  Backlight On */            
-} lcd_backlightstate_t;
+//+ /** LCD Display control */
+//+ typedef enum {
+//+     DISPOFF = 0x00,  /**<  Display Off */    
+//+     DISPON  = 0x04   /**<  Display On */            
+//+ } lcd_displaystate_t;
 
-/** LCD Blink control (UDC), supported for some Controllers */
-typedef enum {
-		BLINKOFF,        /**<  Blink Off */    
-		BLINKON          /**<  Blink On  */            
-} lcd_blinkstate_t;
+//+ /** LCD Backlight control */
+//+ typedef enum {
+//+     LIGHTOFF,        /**<  Backlight Off */    
+//+     LIGHTON          /**<  Backlight On */            
+//+ } lcd_backlightstate_t;
 
-typedef struct {
-		uint8_t row;
-		uint8_t column;
-} lcd_position_t;
+//+ /** LCD Blink control (UDC), supported for some Controllers */
+//+ typedef enum {
+//+     BLINKOFF,        /**<  Blink Off */    
+//+     BLINKON          /**<  Blink On  */            
+//+ } lcd_blinkstate_t;
 
-void Lcd::Init (void) {
+//+ typedef struct {
+//+     uint8_t row;
+//+     uint8_t column;
+//+ } lcd_position_t;
+
+template <GPIO_TypeDef *GpioBank, uint16_t RsPin, uint16_t RwPin, uint16_t EnPin, uint16_t Db4Pin, uint16_t Db5Pin, uint16_t Db6Pin, uint16_t Db7Pin, uint8_t Width, uint8_t Height>
+void Lcd<GpioBank, RsPin, RwPin, EnPin, Db4Pin, Db5Pin, Db6Pin, Db7Pin, Width , Height>::Init (void) {
   GPIO_InitTypeDef  GPIO_InitStruct;
 	
+	/* Wait 100ms for the internal initialisation of the display */
+	HAL_Delay (100);
+
 	/* Init GPIO pins used for LCD interface */
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-	GPIO_InitStruct.Pin = RsPin;
-	GPIO_InitStruct.Pin |= RwPin;
-	GPIO_InitStruct.Pin |= EnPin;
-	GPIO_InitStruct.Pin |= Db4Pin;
-	GPIO_InitStruct.Pin |= Db5Pin;
-	GPIO_InitStruct.Pin |= Db6Pin;
-	GPIO_InitStruct.Pin |= Db7Pin;
+	GPIO_InitStruct.Pin = RsPin | RwPin | EnPin | Db4Pin \
+											| Db5Pin | Db6Pin | Db7Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 	
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(GpioBank, &GPIO_InitStruct);
 
 	/* Initialize state of the LCD pins */
-  HAL_GPIO_WritePin(GPIOD, RsPin
-										| RwPin
-										| EnPin
-										| Db4Pin
-										| Db5Pin
-										| Db6Pin
-										| Db7Pin
-										, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
 
-	/* TODO: Init Timer used to provide delay necessary for LCD control sequences
+	/* Init Timer used to provide delay necessary for LCD control sequences
 	 * Or SysTick and HAL_Delay can be used also 
 	 * */
+	HAL_Delay (1);
+
+	/* Initialise display before busy flag is usable */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, Db4Pin | Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (5);
+
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, Db4Pin | Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	/* TODO Shall be 100µs */
+	HAL_Delay (1);
+
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, Db4Pin | Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+
+	/* Function set DL=0 - 4 bits */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+
+	/* Function set DL=0 - 4 bits, N=1 - 2 lines, F=0 - 5*8 dots */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db7Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+
+	/* Display Off */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db7Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+
+	/* Display Clear */
+	Clear ();
+
+	/* Entry mode set - Increment - Display shift */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db6Pin	| Db4Pin | Db5Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+
+	/* Display On - Cursor On */
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db7Pin	| Db6Pin | Db5Pin | EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+}
+
+template <GPIO_TypeDef *GpioBank, uint16_t RsPin, uint16_t RwPin, uint16_t EnPin, uint16_t Db4Pin, uint16_t Db5Pin, uint16_t Db6Pin, uint16_t Db7Pin, uint8_t Width, uint8_t Height>
+void Lcd<GpioBank, RsPin, RwPin, EnPin, Db4Pin, Db5Pin, Db6Pin, Db7Pin, Width , Height>::Clear (void) {
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, RsPin	| RwPin	| EnPin \
+														| Db4Pin | Db5Pin	| Db6Pin \
+														| Db7Pin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank,  Db4Pin	| EnPin, GPIO_PIN_SET); 
+	HAL_Delay (1);
+  HAL_GPIO_WritePin(GpioBank, EnPin, GPIO_PIN_RESET); 
+	HAL_Delay (1);
 }

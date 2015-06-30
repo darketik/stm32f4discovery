@@ -24,29 +24,24 @@
 //
 // -----------------------------------------------------------------------------
 //
-// API Driver for lcd 16x4 display.
+// API Driver for STM32F4 system.
 
-
-#ifndef LCD16x2_API_H_
-#define LCD16x2_API_H_
+#ifndef SYSTEM_API_H_
+#define SYSTEM_API_H_
 
 #include "stm32f4xx_hal.h"
 
-template <GPIO_TypeDef *GpioBank, uint16_t RsPin, uint16_t RwPin, uint16_t EnPin, uint16_t Db4Pin, uint16_t Db5Pin, uint16_t Db6Pin, uint16_t Db7Pin, uint8_t Width = 16, uint8_t Height = 2 >
-class Lcd {
+class System {
 	public:
-		Lcd () {}
-		~Lcd () {}
+		System () {}
+		~System () {}
 
 		void Init (void);
-		//+ void Print (const char *);
-
 	private:
-		//+ char buffer[Height][Width];
-		//+ lcd_position_t lcd_position;
-
-		void Clear (void);
-
-		//+ DISALLOW_COPY_AND_ASSIGN (Lcd);
+		void SystemClock_Config (void);
+		void Error_Handler (void);
+		//+ DISALLOW_COPY_AND_ASSIGN (System);
 };
-#endif // LCD16x2_API_H_
+
+#endif // SYSTEM_API_H_
+
