@@ -30,6 +30,7 @@
 #define SYSTEM_API_H_
 
 #include "stm32f4xx_hal.h"
+#include "libstm32f4.h"
 
 class System {
 	public:
@@ -37,10 +38,10 @@ class System {
 		~System () {}
 
 		void Init (void);
-	private:
 		void SystemClock_Config (void);
 		void Error_Handler (void);
-		//+ DISALLOW_COPY_AND_ASSIGN (System);
+	private:
+		DISALLOW_COPY_AND_ASSIGN (System);
 };
 
 #endif // SYSTEM_API_H_

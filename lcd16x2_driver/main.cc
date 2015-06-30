@@ -28,20 +28,40 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+using namespace std;
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-	System system;
-	Lcd<GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_13> lcd;
+System system;
 
+// LCD interface pin connection:
+// 4 - RS 		GPIO_PIN_7
+// 5 - R/W		GPIO_PIN_8
+// 6 - EN 		GPIO_PIN_9
+// 11 - DB4		GPIO_PIN_10
+// 12 - DB5		GPIO_PIN_11
+// 13 - DB6		GPIO_PIN_12
+// 14 - DB7		GPIO_PIN_13
+Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_13);
 
 /* Private function prototypes -----------------------------------------------*/
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+void Init (void);
+
+#ifdef __cplusplus
+}
+#endif
+
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	system.Init ();
-	lcd.Init ();
+	Init ();
+
+	lcd.Print("Bonjour !! ");
 
   /* Infinite loop */
   while (1)
@@ -49,8 +69,16 @@ int main (void)
   }
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef __cplusplus
+ extern "C" {
+#endif 
 
+void Init (void) {
+	system.Init ();
+	lcd.Init ();
+}
+
+#ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -67,6 +95,10 @@ void assert_failed(uint8_t* file, uint32_t line)
   while (1)
   {
   }
+}
+#endif
+
+#ifdef __cplusplus
 }
 #endif
 

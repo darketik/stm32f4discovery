@@ -37,6 +37,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
+#ifdef __cplusplus
+ extern "C" {
+#endif 
+
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
   */
@@ -92,5 +96,9 @@ void HAL_MspDeInit(void)
 /**
   * @}
   */
+
+#ifdef __cplusplus
+}
+#endif
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

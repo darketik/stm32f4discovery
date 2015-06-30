@@ -32,6 +32,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "stm32f4_discovery.h"
+#include "stm32f4xx_it.h"
+#include "libstm32f4.h"
 
 #include "system.h"
 #include "lcd16x2_api.h"
