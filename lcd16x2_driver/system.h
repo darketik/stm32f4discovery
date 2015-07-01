@@ -38,9 +38,11 @@ class System {
 		~System () {}
 
 		void Init (void);
+
+	private:
 		void SystemClock_Config (void);
 		void Error_Handler (void);
-	private:
+
 		DISALLOW_COPY_AND_ASSIGN (System);
 };
 
