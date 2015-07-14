@@ -29,6 +29,8 @@
 
 #include "lcd16x2_api.h"
 
+namespace lcd16x2_api {
+
 #define HD44780_CLEAR                          0x01
 
 #define HD44780_HOME                           0x02
@@ -63,6 +65,18 @@
 
 #define HD44780_CGRAM_SET                      0x40
 #define HD44780_DDRAM_SET                      0x80
+
+#define PROGRESSPIXELS_PER_CHAR									5
+
+static const uint8_t CustomChar [] =
+{
+	0x00, 0x1F, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x00, // 0. 0/5 full progress block
+	0x00, 0x1F, 0x10, 0x10, 0x10, 0x10, 0x1F, 0x00, // 1. 1/5 full progress block
+	0x00, 0x1F, 0x18, 0x18, 0x18, 0x18, 0x1F, 0x00, // 2. 2/5 full progress block
+	0x00, 0x1F, 0x1C, 0x1C, 0x1C, 0x1C, 0x1F, 0x00, // 3. 3/5 full progress block
+	0x00, 0x1F, 0x1E, 0x1E, 0x1E, 0x1E, 0x1F, 0x00, // 4. 4/5 full progress block
+	0x00, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x1F, 0x00, // 5. 5/5 full progress block
+};
 
 
 void Lcd::Init (void) {
@@ -115,6 +129,14 @@ void Lcd::Init (void) {
 
 	/* Display On */
 	WriteCmd (HD44780_DISPLAY_ONOFF | HD44780_DISPLAY_ON);
+
+	/* Add Custom characters in CGRAM */ 
+	AddCustomChar(0, 0, CustomChar);
+	AddCustomChar(1, 1, CustomChar);
+	AddCustomChar(2, 2, CustomChar);
+	AddCustomChar(3, 3, CustomChar);
+	AddCustomChar(4, 4, CustomChar);
+	AddCustomChar(5, 5, CustomChar);
 }
 
 void Lcd::Clear (void) {
@@ -126,8 +148,81 @@ void Lcd::Print (const char * str) {
 			WriteData (*str++);
 }
 
+void Lcd::PrintXY (const char * str, uint8_t x, uint8_t y) {
+		Locate (x, y);
+		Print (str);
+}
+
 void Lcd::RetHome () {
 	WriteCmd (HD44780_HOME);
+}
+
+// x range [0:15]
+// y range [0:1], 0 for first line, 1 for second line
+void Lcd::Locate (uint8_t x, uint8_t y) {
+	WriteCmd (HD44780_DDRAM_SET | (x + (0x40 * y)));
+
+}
+
+void Lcd::ProgressBar (uint32_t progress, uint32_t max_progress, uint8_t lcd_char_length) {
+
+	uint32_t i;
+	uint32_t pixelprogress;
+	uint8_t c;
+
+	// draw a progress bar displaying (progress / maxprogress)
+	// starting from the current cursor position
+	// with a total length of "length" characters
+	// ***note, LCD chars 0-5 must be programmed as the bar characters
+	// char 0 = empty ... char 5 = full
+
+	// total pixel length of bargraph equals length*PROGRESSPIXELS_PER_CHAR;
+	// pixel length of bar itself is
+	pixelprogress = ((progress * ((uint32_t)lcd_char_length * (uint32_t)PROGRESSPIXELS_PER_CHAR)) / max_progress);
+	
+	// print exactly "length" characters
+	for(i=0; i<(uint32_t)lcd_char_length; ++i)
+	{
+		// check if this is a full block, or partial or empty
+		// (uint16_t) cast is needed to avoid sign comparison warning
+		if( ((i*(uint32_t)PROGRESSPIXELS_PER_CHAR)+5) > pixelprogress )
+		{
+			// this is a partial or empty block
+			if( ((i*(uint32_t)PROGRESSPIXELS_PER_CHAR)) > pixelprogress )
+			{
+				// this is an empty block
+				// use space character?
+				c = 0;
+			}
+			else
+			{
+				// this is a partial block
+				c = pixelprogress % PROGRESSPIXELS_PER_CHAR;
+			}
+		}
+		else
+		{
+			// this is a full block
+			c = 5;
+		}
+		
+		// write character to display
+		WriteData (c);
+	}
+
+}
+
+void Lcd::AddCustomChar(uint8_t lcd_char_num, uint8_t rom_char_num, const uint8_t * const rom_char_array) {
+	uint8_t saveDDRAMAddr;
+	uint8_t i;
+	saveDDRAMAddr = ReadBusyFlag () & 0x7F;
+
+	for (i=0; i<8; ++i) {
+		WriteCmd (HD44780_CGRAM_SET | ((lcd_char_num << 3) + i));
+		WriteData (*(rom_char_array + (rom_char_num << 3) + i));
+	}
+
+	WriteCmd (HD44780_DDRAM_SET | saveDDRAMAddr);
 }
 
 void Lcd::WriteCmd (uint8_t cmd) {
@@ -194,3 +289,5 @@ uint8_t Lcd::ReadNibble (void) {
 	HAL_GPIO_WritePin (GpioBank, EnPin, GPIO_PIN_RESET);
 	return val;
 }
+
+} // namespace lcd16x2_api 

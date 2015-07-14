@@ -29,6 +29,8 @@
 
 #include "system.h"
 
+namespace system {
+
 void System::Init (void) {
   /* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, Flash preread and Buffer caches
@@ -123,3 +125,4 @@ void System::Error_Handler (void)
   }
 }
 
+} // namespace system

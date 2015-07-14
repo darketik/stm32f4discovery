@@ -32,6 +32,8 @@
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
 
+namespace system {
+
 class System {
 	public:
 		System () {}
@@ -45,6 +47,8 @@ class System {
 
 		DISALLOW_COPY_AND_ASSIGN (System);
 };
+
+} // namespace system
 
 #endif // SYSTEM_API_H_
 

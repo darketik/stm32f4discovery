@@ -29,12 +29,14 @@
 #include "main.h"
 
 using namespace std;
+using namespace lcd16x2_api;
+using namespace system;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-System system;
+System sys;
 
 // LCD interface pin connection:
 // 4 - RS 		GPIO_PIN_7
@@ -61,11 +63,25 @@ int main (void)
 {
 	Init ();
 
-	lcd.Print("Bonjour !! ");
-
   /* Infinite loop */
   while (1)
   {
+		lcd.Clear ();
+		lcd.Print("Bonjour !! ");
+		lcd.PrintXY("Hello /-\\|", 0, 1);
+
+		HAL_Delay (3000);
+
+		lcd.Clear ();
+		lcd.Locate (1, 0);
+		lcd.Print("STM32F4 Tests");
+
+		uint32_t i;
+		for (i=0; i<1000; ++i) {
+			lcd.Locate (1, 1);
+			lcd.ProgressBar(i, 1000-1, 14);
+			HAL_Delay (5);
+		}
   }
 }
 
@@ -74,7 +90,7 @@ int main (void)
 #endif 
 
 void Init (void) {
-	system.Init ();
+	sys.Init ();
 	lcd.Init ();
 }
 

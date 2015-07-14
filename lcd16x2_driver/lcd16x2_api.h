@@ -33,6 +33,8 @@
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
 
+namespace lcd16x2_api {
+
 class Lcd {
 	public:
 		Lcd (GPIO_TypeDef *GpioBank, uint16_t RsPin, uint16_t RwPin, uint16_t EnPin, uint16_t Db4Pin, uint16_t Db5Pin, uint16_t Db6Pin, uint16_t Db7Pin) {
@@ -49,10 +51,20 @@ class Lcd {
 
 		void Init (void);
 		void Clear (void);
-		void Print (const char *);
+		void Print (const char * str);
+		void PrintXY (const char * str, uint8_t x, uint8_t y);
 		void RetHome (void);
-
+		void Locate (uint8_t x, uint8_t y);
+		void ProgressBar (uint32_t progress, uint32_t max_progress, uint8_t lcd_char_length);
+		void AddCustomChar(uint8_t lcd_char_num, uint8_t rom_char_num, const uint8_t * const rom_char_array);
+		
 	private:
+		void WriteCmd (uint8_t cmd);
+		void WriteData (uint8_t data);
+		void WriteCmd4bits (uint8_t cmd);
+		uint8_t ReadBusyFlag (void);
+		uint8_t ReadNibble (void);
+
 		GPIO_InitTypeDef  GPIO_InitStruct;
 		GPIO_TypeDef *GpioBank;
 		uint16_t RsPin;
@@ -63,12 +75,9 @@ class Lcd {
 		uint16_t Db6Pin;
 		uint16_t Db7Pin;
 
-		void WriteCmd (uint8_t);
-		void WriteData (uint8_t);
-		void WriteCmd4bits (uint8_t);
-		uint8_t ReadBusyFlag (void);
-		uint8_t ReadNibble (void);
-
 		DISALLOW_COPY_AND_ASSIGN (Lcd);
 };
+
+} // namespace lcd16x2_api 
+
 #endif // LCD16x2_API_H_
