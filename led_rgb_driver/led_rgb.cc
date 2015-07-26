@@ -29,14 +29,16 @@
 
 #include "led_rgb.h"
 
+#define GPIOx_CLK_ENABLE __HAL_RCC_GPIOC_CLK_ENABLE
+
 namespace led_rgb {
 
 void LedRgb::Init (void) {
 	GPIO_InitTypeDef  GPIO_InitStruct;
-
+	
 	/* Init GPIO pins used for LCD interface */
 	/* TODO find a way to make it generic to any GPIO bank */
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	GPIOx_CLK_ENABLE ();
 
 	GPIO_InitStruct.Pin = RedPin | GreenPin | BluePin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -46,27 +48,30 @@ void LedRgb::Init (void) {
   HAL_GPIO_Init(GpioBank, &GPIO_InitStruct);
 
 	/* Initialize state of the LCD pins */
-  HAL_GPIO_WritePin(GpioBank, RedPin | GreenPin | BluePin
-														, GPIO_PIN_RESET); 
+	Off ();
 
 	/* Wait 100ms */
 	HAL_Delay (100);
 }
 
 void LedRgb::SetRed (uint8_t val) {
-  HAL_GPIO_WritePin(GpioBank, RedPin, GPIO_PIN_SET); 
+  HAL_GPIO_WritePin(GpioBank, RedPin, GPIO_PIN_RESET); 
 }
 
 void LedRgb::SetGreen (uint8_t val) {
-  HAL_GPIO_WritePin(GpioBank, GreenPin, GPIO_PIN_SET); 
+  HAL_GPIO_WritePin(GpioBank, GreenPin, GPIO_PIN_RESET); 
 }
 
 void LedRgb::SetBlue (uint8_t val) {
-  HAL_GPIO_WritePin(GpioBank, BluePin, GPIO_PIN_SET); 
+  HAL_GPIO_WritePin(GpioBank, BluePin, GPIO_PIN_RESET); 
+}
+
+void LedRgb::On (void) {
+  HAL_GPIO_WritePin(GpioBank, RedPin | GreenPin | BluePin, GPIO_PIN_RESET); 
 }
 
 void LedRgb::Off (void) {
-  HAL_GPIO_WritePin(GpioBank, RedPin | GreenPin | BluePin, GPIO_PIN_RESET); 
+  HAL_GPIO_WritePin(GpioBank, RedPin | GreenPin | BluePin, GPIO_PIN_SET); 
 }
 
 

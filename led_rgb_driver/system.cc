@@ -41,7 +41,11 @@ void System::Init (void) {
              handled in milliseconds basis.
        - Low Level Initialization
 	*/
-  HAL_Init ();
+  if (HAL_Init () != HAL_OK)
+  {
+    /* Initialization Error */
+    Error_Handler ();
+  }
 
   /* Configure the System clock to have a frequency of 168 MHz */
   SystemClock_Config ();

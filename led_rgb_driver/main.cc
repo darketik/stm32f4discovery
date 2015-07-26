@@ -34,6 +34,8 @@ using namespace system;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+#define CHANGE_COLOR_DELAY 500
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 System sys;
@@ -63,13 +65,18 @@ int main (void)
   while (1)
   {
 		led_rgb_pixel.SetRed (0xff);
-		HAL_Delay (1000);
-		led_rgb_pixel.SetGreen (0xff);
-		HAL_Delay (1000);
-		led_rgb_pixel.SetBlue (0xff);
-		HAL_Delay (3000);
+		HAL_Delay (CHANGE_COLOR_DELAY);
 		led_rgb_pixel.Off ();
-		HAL_Delay (3000);
+		led_rgb_pixel.SetGreen (0xff);
+		HAL_Delay (CHANGE_COLOR_DELAY);
+		led_rgb_pixel.Off ();
+		led_rgb_pixel.SetBlue (0xff);
+		HAL_Delay (CHANGE_COLOR_DELAY);
+		led_rgb_pixel.Off ();
+		HAL_Delay (CHANGE_COLOR_DELAY);
+		led_rgb_pixel.On ();
+		HAL_Delay (CHANGE_COLOR_DELAY);
+		led_rgb_pixel.Off ();
   }
 }
 

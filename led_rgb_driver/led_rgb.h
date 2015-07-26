@@ -52,6 +52,7 @@ class LedRgb {
 		void SetRed (uint8_t val);
 		void SetGreen (uint8_t val);
 		void SetBlue (uint8_t val);
+		void On (void);
 		void Off (void);
 		
 	private:
