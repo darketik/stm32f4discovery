@@ -31,6 +31,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
+#include "stm32f4_discovery.h"
 
 namespace system {
 
@@ -54,6 +55,7 @@ class System {
 #endif 
 
 void Error_Handler (void);
+void Error_Check (void);
 
 #ifdef __cplusplus
 }

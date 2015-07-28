@@ -34,7 +34,7 @@ using namespace system;
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define CHANGE_COLOR_DELAY 500
+#define CHANGE_COLOR_DELAY 5
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -60,25 +60,94 @@ void Init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
+	uint16_t red = 0;
+	uint16_t green = 0;
+	uint16_t blue = 0;
+
 	Init ();
 
   /* Infinite loop */
   while (1)
   {
-		//+ led_rgb_pixel.SetRed (0xff);
-		//+ HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ led_rgb_pixel.Off ();
-		//+ led_rgb_pixel.SetGreen (0xff);
-		//+ HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ led_rgb_pixel.Off ();
-		//+ led_rgb_pixel.SetBlue (0xff);
-		//+ HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ led_rgb_pixel.Off ();
-		//+ HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ led_rgb_pixel.On ();
-		//+ HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ led_rgb_pixel.Off ();
-  }
+		led_rgb_pixel.On (RED);
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, 255 - red);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red > 128) red++;
+		}
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, red);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red < 128) red++;
+		}
+		led_rgb_pixel.Off (RED);
+
+
+		led_rgb_pixel.On (GREEN);
+		for (green = 0; green < 256; green++) {
+			led_rgb_pixel.SetColorIntensity (GREEN, 255 - green);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (green > 128) green++;
+		}
+		for (green = 0; green < 256; green++) {
+			led_rgb_pixel.SetColorIntensity (GREEN, green);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (green < 128) green++;
+		}
+		led_rgb_pixel.Off (GREEN);
+
+
+		led_rgb_pixel.On (BLUE);
+		for (blue = 0; blue < 256; blue++) {
+			led_rgb_pixel.SetColorIntensity (BLUE, 255 - blue);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (blue > 128) blue++;
+		}
+		for (blue = 0; blue < 256; blue++) {
+			led_rgb_pixel.SetColorIntensity (BLUE, blue);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (blue < 128) blue++;
+		}
+		led_rgb_pixel.Off (BLUE);
+
+
+		// orange
+		led_rgb_pixel.On (RED);
+		led_rgb_pixel.On (GREEN);
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, 255 - red);
+			led_rgb_pixel.SetColorIntensity (GREEN, 255 - (red>128?128:red));
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red > 128) red++;
+		}
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, red);
+			led_rgb_pixel.SetColorIntensity (GREEN, (red<128?128:red));
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red < 128) red++;
+		}
+		led_rgb_pixel.Off (RED);
+		led_rgb_pixel.Off (GREEN);
+
+		// pink violet fluo
+		led_rgb_pixel.On (RED);
+		led_rgb_pixel.On (BLUE);
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, 255 - red);
+			led_rgb_pixel.SetColorIntensity (BLUE, 255 - red);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red > 128) red++;
+		}
+		for (red = 0; red < 256; red++) {
+			led_rgb_pixel.SetColorIntensity (RED, red);
+			led_rgb_pixel.SetColorIntensity (BLUE, red);
+			HAL_Delay (CHANGE_COLOR_DELAY);
+			if (red < 128) red++;
+		}
+		led_rgb_pixel.Off (RED);
+		led_rgb_pixel.Off (BLUE);
+		HAL_Delay (1000);
+	}
 }
 #ifdef __cplusplus
  extern "C" {
@@ -86,6 +155,7 @@ int main (void)
 
 void Init (void) {
 	sys.Init ();
+  BSP_LED_Init(LED3);//orange
 	led_rgb_pixel.Init ();
 }
 
@@ -105,6 +175,7 @@ void assert_failed(uint8_t* file, uint32_t line)
   /* Infinite loop */
   while (1)
   {
+		Error_Handler ();
   }
 }
 #endif

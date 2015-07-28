@@ -30,6 +30,9 @@
 // GREEN - PC8
 // BLUS - PC9
 
+//TODO:
+// - provide generic value for PWM period and PWM max duty cycle value
+// - provide a function to ramp color intensity with a logarithm speed
 
 #ifndef LED_RGB_H_
 #define LED_RGB_H_
@@ -40,19 +43,24 @@
 
 namespace led_rgb {
 
+// TODO: define a enum in place of defines 
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+
 class LedRgb {
 	public:
 		LedRgb () { }
 		~LedRgb () { }
 
 		void Init (void);
-		//+ void SetRed (uint8_t val);
-		//+ void SetGreen (uint8_t val);
-		//+ void SetBlue (uint8_t val);
-		//+ void On (void);
-		//+ void Off (void);
+		void SetColorIntensity (uint32_t color, uint8_t val);
+		void On (uint32_t color);
+		void Off (uint32_t color);
 		
 	private:
+		TIM_HandleTypeDef TIMx_Handle;
+		TIM_OC_InitTypeDef TIMx_OC_InitStruct;
 		DISALLOW_COPY_AND_ASSIGN (LedRgb);
 };
 

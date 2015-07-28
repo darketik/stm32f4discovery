@@ -31,8 +31,8 @@ F_CRYSTAL      			= 8000000L
 #+ APPLICATION    			= FALSE
 
 # Packages to build
-TARGET         			= led_rgb_driver
-PACKAGES						= led_rgb_driver
+TARGET         			= led_rgb_pwm_driver
+PACKAGES						= led_rgb_pwm_driver
 
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag

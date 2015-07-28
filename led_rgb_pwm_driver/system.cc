@@ -41,11 +41,11 @@ void System::Init (void) {
              handled in milliseconds basis.
        - Low Level Initialization
 	*/
-  if (HAL_Init () != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler ();
-  }
+	if (HAL_Init () != HAL_OK)
+	{
+		/* Initialization Error */
+		Error_Handler ();
+	}
 
   /* Configure the System clock to have a frequency of 168 MHz */
   SystemClock_Config ();
@@ -133,9 +133,17 @@ void Error_Handler (void)
   /* User may add here some code to deal with this error */
   while(1)
   {
+	  BSP_LED_Toggle(LED3);
+	  HAL_Delay(100);
   }
 }
 
+void Error_Check (void) {
+	  BSP_LED_Toggle(LED3);
+	  HAL_Delay(1000);
+	  BSP_LED_Toggle(LED3);
+	  HAL_Delay(1000);
+}
 #ifdef __cplusplus
 }
 #endif
