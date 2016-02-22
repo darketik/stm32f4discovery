@@ -29,21 +29,9 @@
 
 #include "led_rgb.h"
 
-#define TIMx TIM3 
-#define TIMx_CLK_ENABLE __HAL_RCC_TIM3_CLK_ENABLE
-#define TIMx_CLK 10000000
-#define TIMx_PWM_PERIOD 256 // TIMER ARR - PWM freq ~= 39kHz (256)
-#define TIMx_PWM_DEFAULT_DUTY_CYCLE 255 // CCR value for a TIMER channel - 50% 
-
-#define LED_RGB_GPIOx GPIOC
-#define LED_RGB_GPIOx_RED GPIO_PIN_6
-#define LED_RGB_GPIOx_GREEN GPIO_PIN_8
-#define LED_RGB_GPIOx_BLUE GPIO_PIN_9
-#define LED_RGB_GPIOx_CLK_ENABLE __HAL_RCC_GPIOC_CLK_ENABLE
-
 namespace led_rgb {
 
-void LedRgb::Init (void) {
+void LedRgb::init (void) {
 	uint32_t uPrescaler = 0;
 
 	// PWM config 
@@ -60,14 +48,26 @@ void LedRgb::Init (void) {
 	// PWM freq computation
 	// PWM_Freq = TIMx_CLK / ARR
 	SystemCoreClock = HAL_RCC_GetHCLKFreq ();
-	uPrescaler = (uint32_t) ((SystemCoreClock / 2) / TIMx_CLK) - 1;
+	uPrescaler = (uint32_t) ((SystemCoreClock / 2) / TIMx_clock) - 1;
 
 	// configure timer
 	TIMx_Handle.Instance = TIMx;
 	TIMx_Handle.Init.Prescaler = uPrescaler;
 	TIMx_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	TIMx_Handle.Init.Period = TIMx_PWM_PERIOD - 1; 
+	TIMx_Handle.Init.Period = pwm_period - 1; 
 	TIMx_Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+
+	// HAL_TIM_PWM_MspInit replacement
+	GPIO_InitTypeDef  GPIO_InitStruct;
+	TIMx_CLK_ENABLE ();
+	LED_RGB_GPIOx_CLK_ENABLE ();
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = TIMx_af;
+	GPIO_InitStruct.Pin = red_gpio | green_gpio | blue_gpio;
+	HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+
 	// below function uses user definition of HAL_TIM_PWM_MspInit
 	if (HAL_TIM_PWM_Init (&TIMx_Handle) != HAL_OK) {
 		Error_Handler ();
@@ -110,8 +110,8 @@ void LedRgb::Init (void) {
 	}
 }
 
-// TODO: find a way to change duty cycle at a precise end of PWM period
-void LedRgb::SetColorIntensity (uint32_t color, uint8_t val) {
+// TODO: change duty cycle at a precise end of PWM period
+void LedRgb::setColorDutyCycle (uint32_t color, uint8_t val) {
 	switch (color) 
 	{
 		case (RED):
@@ -137,7 +137,7 @@ void LedRgb::SetColorIntensity (uint32_t color, uint8_t val) {
 	}
 }
 
-void LedRgb::On (uint32_t color) {
+void LedRgb::on (uint32_t color) {
 	switch (color) 
 	{
 		case (RED):
@@ -172,7 +172,7 @@ void LedRgb::On (uint32_t color) {
 	}
 }
 
-void LedRgb::Off (uint32_t color) {
+void LedRgb::off (uint32_t color) {
 	switch (color) 
 	{
 		case (RED):
@@ -210,25 +210,25 @@ void LedRgb::Off (uint32_t color) {
 
 } // namespace led_rgb 
 
-#ifdef __cplusplus
- extern "C" {
-#endif 
+//+ #ifdef __cplusplus
+//+  extern "C" {
+//+ #endif 
 
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
-{
-	GPIO_InitTypeDef  GPIO_InitStruct;
+//+ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
+//+ {
+//+   GPIO_InitTypeDef  GPIO_InitStruct;
 
-	TIMx_CLK_ENABLE ();
-	LED_RGB_GPIOx_CLK_ENABLE ();
-	
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-	GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
-	GPIO_InitStruct.Pin = LED_RGB_GPIOx_RED | LED_RGB_GPIOx_GREEN | LED_RGB_GPIOx_BLUE;
-	HAL_GPIO_Init(LED_RGB_GPIOx, &GPIO_InitStruct);
-}
+//+   TIMx_CLK_ENABLE ();
+//+   LED_RGB_GPIOx_CLK_ENABLE ();
+//+   
+//+   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+//+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+//+   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+//+   GPIO_InitStruct.Alternate = TIMx_af;
+//+   GPIO_InitStruct.Pin = red_gpio | green_gpio | blue_gpio;
+//+   HAL_GPIO_Init(GPIOx, &GPIO_InitStruct);
+//+ }
 
-#ifdef __cplusplus
-}
-#endif
+//+ #ifdef __cplusplus
+//+ }
+//+ #endif

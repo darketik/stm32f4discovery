@@ -40,7 +40,7 @@ class System {
 		System () {}
 		~System () {}
 
-		void Init (void);
+		void init (void);
 
 	private:
 		void SystemClock_Config (void);
