@@ -36,7 +36,7 @@
 #include "libstm32f4.h"
 
 #include "system.h"
-#include "led_rgb.h"
+#include "led_rgb_pwm.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
