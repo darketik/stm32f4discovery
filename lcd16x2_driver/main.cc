@@ -29,7 +29,7 @@
 #include "main.h"
 
 using namespace std;
-using namespace lcd16x2_api;
+using namespace lcd16x2;
 using namespace system;
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,7 +52,7 @@ Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GP
 #ifdef __cplusplus
  extern "C" {
 #endif 
-void Init (void);
+void init (void);
 
 #ifdef __cplusplus
 }
@@ -61,7 +61,7 @@ void Init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	Init ();
+	init ();
 
   /* Infinite loop */
   while (1)
@@ -89,9 +89,9 @@ int main (void)
  extern "C" {
 #endif 
 
-void Init (void) {
-	sys.Init ();
-	lcd.Init ();
+void init (void) {
+	sys.init ();
+	lcd.init ();
 }
 
 #ifdef  USE_FULL_ASSERT

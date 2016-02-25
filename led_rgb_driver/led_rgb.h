@@ -48,7 +48,7 @@ class LedRgb {
 			}
 		~LedRgb () {}
 
-		void Init (void);
+		void init (void);
 		void SetRed (uint8_t val);
 		void SetGreen (uint8_t val);
 		void SetBlue (uint8_t val);

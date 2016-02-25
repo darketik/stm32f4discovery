@@ -50,7 +50,7 @@ LedRgb led_rgb_pixel (GPIOC, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_4);
 #ifdef __cplusplus
  extern "C" {
 #endif 
-void Init (void);
+void init (void);
 
 #ifdef __cplusplus
 }
@@ -59,7 +59,7 @@ void Init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	Init ();
+	init ();
 
   /* Infinite loop */
   while (1)
@@ -84,9 +84,9 @@ int main (void)
  extern "C" {
 #endif 
 
-void Init (void) {
-	sys.Init ();
-	led_rgb_pixel.Init ();
+void init (void) {
+	sys.init ();
+	led_rgb_pixel.init ();
 }
 
 #ifdef  USE_FULL_ASSERT

@@ -33,7 +33,7 @@
 
 namespace led_rgb {
 
-void LedRgb::Init (void) {
+void LedRgb::init (void) {
 	GPIO_InitTypeDef  GPIO_InitStruct;
 	
 	/* Init GPIO pins used for LCD interface */

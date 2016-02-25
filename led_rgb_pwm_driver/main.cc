@@ -29,7 +29,7 @@
 #include "main.h"
 
 using namespace std;
-using namespace led_rgb;
+using namespace led_rgb_pwm;
 using namespace system;
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +45,7 @@ System sys;
 // RED - PC6
 // GREEN - PC8
 // BLUE - PC9
-LedRgb led_rgb_pixel(GPIOC, GPIO_PIN_6, GPIO_PIN_8, GPIO_PIN_9,
+LedRgbPwm led_rgb_pixel(GPIOC, GPIO_PIN_6, GPIO_PIN_8, GPIO_PIN_9,
 						TIM3, GPIO_AF2_TIM3, 10000000,
 						 256, 0, 0, 0);
 
