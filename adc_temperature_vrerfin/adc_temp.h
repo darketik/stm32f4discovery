@@ -24,60 +24,53 @@
 //
 // -----------------------------------------------------------------------------
 //
-// API Driver for lcd 16x4 display.
+// API Driver for RGB LED.
+// PWM mode
+// RED - PC6
+// GREEN - PC8
+// BLUS - PC9
 
+//TODO:
+// - provide generic value for PWM period and PWM max duty cycle value
+// - provide a function to ramp color intensity with a logarithm speed
 
-#ifndef LCD16x2_API_H_
-#define LCD16x2_API_H_
+#ifndef LED_RGB_H_
+#define LED_RGB_H_
 
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
+#include "system.h"
 
-namespace lcd16x2_api {
+namespace led_rgb {
 
-class Lcd {
+// TODO: define a enum in place of defines 
+#define RED 0
+#define GREEN 1
+#define BLUE 2
+
+class LedRgb {
 	public:
-		Lcd (GPIO_TypeDef *GpioBank, uint16_t RsPin, uint16_t RwPin, uint16_t EnPin, uint16_t Db4Pin, uint16_t Db5Pin, uint16_t Db6Pin, uint16_t Db7Pin) {
-				this->GpioBank = GpioBank;
-				this->RsPin = RsPin;
-				this->RwPin = RwPin;
-				this->EnPin = EnPin;
-				this->Db7Pin = Db7Pin;
-				this->Db6Pin = Db6Pin;
-				this->Db5Pin = Db5Pin;
-				this->Db4Pin = Db4Pin;
-			}
-		~Lcd () {}
+		//+ LedRgb (uint32_t pwm_period, uint32_t red_dc, uint32_t green_dc, uint32_t blue_dc) { }
+		LedRgb () { }
+		~LedRgb () { }
 
 		void Init (void);
-		void Clear (void);
-		void Print (const char * str);
-		void PrintXY (const char * str, uint8_t x, uint8_t y);
-		void RetHome (void);
-		void Locate (uint8_t x, uint8_t y);
-		void ProgressBar (uint32_t progress, uint32_t max_progress, uint8_t lcd_char_length);
-		void AddCustomChar(uint8_t lcd_char_num, uint8_t rom_char_num, const uint8_t * const rom_char_array);
+		void SetColorIntensity (uint32_t color, uint8_t val);
+		void On (uint32_t color);
+		void Off (uint32_t color);
 		
 	private:
-		void WriteCmd (uint8_t cmd);
-		void WriteData (uint8_t data);
-		void WriteCmd4bits (uint8_t cmd);
-		uint8_t ReadBusyFlag (void);
-		uint8_t ReadNibble (void);
+		TIM_HandleTypeDef TIMx_Handle;
+		TIM_OC_InitTypeDef TIMx_OC_InitStruct;
+	
+		uint32_t pwm_period;
+		uint32_t red_pwm_duty_cycle;
+		uint32_t green_pwm_duty_cycle;
+		uint32_t blue_pwm_duty_cycle;
 
-		GPIO_InitTypeDef  GPIO_InitStruct;
-		GPIO_TypeDef *GpioBank;
-		uint16_t RsPin;
-		uint16_t RwPin;
-		uint16_t EnPin;
-		uint16_t Db4Pin;
-		uint16_t Db5Pin;
-		uint16_t Db6Pin;
-		uint16_t Db7Pin;
-
-		DISALLOW_COPY_AND_ASSIGN (Lcd);
+		DISALLOW_COPY_AND_ASSIGN (LedRgb);
 };
 
-} // namespace lcd16x2_api 
+} // namespace led_rgb 
 
-#endif // LCD16x2_API_H_
+#endif // LED_RGB_H_
