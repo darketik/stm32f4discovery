@@ -24,53 +24,30 @@
 //
 // -----------------------------------------------------------------------------
 //
-// API Driver for RGB LED.
-// PWM mode
-// RED - PC6
-// GREEN - PC8
-// BLUS - PC9
+// API Driver for ADC temperature sensor of stm32f407.
 
 //TODO:
-// - provide generic value for PWM period and PWM max duty cycle value
-// - provide a function to ramp color intensity with a logarithm speed
 
-#ifndef LED_RGB_H_
-#define LED_RGB_H_
+#ifndef ADC_TEMP_H_
+#define ADC_TEMP_H_
 
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
-#include "system.h"
 
-namespace led_rgb {
+namespace adc_temp {
 
-// TODO: define a enum in place of defines 
-#define RED 0
-#define GREEN 1
-#define BLUE 2
-
-class LedRgb {
+class AdcTemp {
 	public:
-		//+ LedRgb (uint32_t pwm_period, uint32_t red_dc, uint32_t green_dc, uint32_t blue_dc) { }
-		LedRgb () { }
-		~LedRgb () { }
+		AdcTem() { }
+		~AdcTemp() { }
 
-		void Init (void);
-		void SetColorIntensity (uint32_t color, uint8_t val);
-		void On (uint32_t color);
-		void Off (uint32_t color);
+		void init (void);
 		
 	private:
-		TIM_HandleTypeDef TIMx_Handle;
-		TIM_OC_InitTypeDef TIMx_OC_InitStruct;
-	
-		uint32_t pwm_period;
-		uint32_t red_pwm_duty_cycle;
-		uint32_t green_pwm_duty_cycle;
-		uint32_t blue_pwm_duty_cycle;
 
-		DISALLOW_COPY_AND_ASSIGN (LedRgb);
+		DISALLOW_COPY_AND_ASSIGN (AdcTemp);
 };
 
-} // namespace led_rgb 
+} // namespace adc_temp 
 
-#endif // LED_RGB_H_
+#endif // ADC_TEMP_H_
