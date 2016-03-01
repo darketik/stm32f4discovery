@@ -27,6 +27,10 @@
 // API Driver for ADC temperature sensor of stm32f407.
 
 //TODO:
+// - check sampling time config in ADCx_ChannelConf face to TempSensor
+// constraint in datasheet
+// - Define a sampling rate to process tempsensor measure and configure it
+// using a timer trigger for the ADC
 
 #ifndef ADC_TEMP_H_
 #define ADC_TEMP_H_
@@ -36,14 +40,28 @@
 
 namespace adc_temp {
 
+#define ADCx_DMA_CHANNEL		DMA_CHANNEL_0
+#define ADCx_DMA_STREAM			DMA1_Stream0
+#define ADCx_DMA_CLK_ENABLE __HAL_RCC_DMA1_CLK_ENABLE()
+#define ADCx_DMA_IRQn				DMA1_Stream0_IRQn
+#define ADCx_DMA_IRQHandler	DMA1_Stream0_IRQHandler
+
+#define ADCx 								ADC1
+#define ADCx_CLK_ENABLE 		__HAL_RCC_ADC1_CLK_ENABLE()
+#define ADCx_CHANNEL				ADC_CHANNEL_TEMPSENSOR
+
 class AdcTemp {
 	public:
-		AdcTem() { }
+		AdcTemp() { }
 		~AdcTemp() { }
 
 		void init (void);
+		ADC_HandleTypeDef * getAdcHandle(void);
 		
 	private:
+		uint16_t temp;
+		ADC_HandleTypeDef ADCx_Handle;
+		ADC_ChannelConfTypeDef ADCx_ChannelConf;
 
 		DISALLOW_COPY_AND_ASSIGN (AdcTemp);
 };

@@ -47,6 +47,9 @@ System sys;
 // BLUS - PC9
 LedRgb led_rgb_pixel;
 
+// STM32F407 temperature sensor 
+AdcTemp tempsensor;
+
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __cplusplus
  extern "C" {

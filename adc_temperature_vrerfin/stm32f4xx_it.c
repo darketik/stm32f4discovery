@@ -33,6 +33,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+extern AdcTemp tempsensor;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -40,6 +41,9 @@
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
+#ifdef __cplusplus
+ extern "C" {
+#endif 
 
 /**
   * @brief   This function handles NMI exception.
@@ -154,3 +158,12 @@ void SysTick_Handler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
+void ADCx_DMA_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(tempsensor.getAdcHandle()->DMA_Handle);
+}
+
+#ifdef __cplusplus
+}
+#endif
+
