@@ -36,12 +36,19 @@
 #include "libstm32f4.h"
 
 #include "system.h"
+#include "adc_temp.h"
 #include "lcd16x2.h"
+
+using namespace std;
+using namespace adc_temp;
+using namespace lcd16x2;
+using namespace system;
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+
 
 #endif /* __MAIN_H */
 

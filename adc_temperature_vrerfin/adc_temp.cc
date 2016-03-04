@@ -34,7 +34,7 @@ namespace adc_temp {
 void AdcTemp::init (void) {
 	// config ADCx 
 	ADCx_Handle.Instance = ADCx;
-	ADCx_Handle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+	ADCx_Handle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
 	ADCx_Handle.Init.Resolution = ADC_RESOLUTION_12B;
 	ADCx_Handle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
 	ADCx_Handle.Init.ScanConvMode = DISABLE;
@@ -55,14 +55,24 @@ void AdcTemp::init (void) {
 	// configure ADCx regular channel
 	ADCx_ChannelConf.Channel = ADC_CHANNEL_TEMPSENSOR;
 	ADCx_ChannelConf.Rank = 1;
-	ADCx_ChannelConf.SamplingTime = ADC_SAMPLETIME_112CYCLES; // carefull with internal measurement channels
+	ADCx_ChannelConf.SamplingTime = ADC_SAMPLETIME_480CYCLES; // APB2_CLK = HCLK/2
+																														// ADC_CLK = APB2_CLK/4 = 21MHz
+																														// Total Time = (ADC_RES + Sampling time) / ADC_CLK
+																														// 						= 23.4 µs
+																														// 
+																														// carefull with internal measurement channels
 																														// sampling time constraints must be respected 
 																														// (sampling time can be adjusted in function of 
 																														// ADC clock frequency and sampling time setting)
 	ADCx_ChannelConf.Offset = 0;
 
+	// enable temperature sensor on ADC1_IN16
+	ADC->CCR |= ADC_CCR_TSVREFE;
+
+	HAL_Delay(1);
+
 	// initialiaze ADCx Channel
-	if (HAL_ADC_ConfigChannel(&ADCx_Handle, &ADCx_ChannelConf) != HAL_OK) {
+	if (HAL_ADC_ConfigChannel (&ADCx_Handle, &ADCx_ChannelConf) != HAL_OK) {
 		Error_Handler ();
 	}
 
@@ -73,7 +83,18 @@ void AdcTemp::init (void) {
 }
 
 ADC_HandleTypeDef * AdcTemp::getAdcHandle (void) {
-	return &(this.ADCx_Handle);
+	return &(this->ADCx_Handle);
+}
+
+uint16_t AdcTemp::getTemp(void) {
+	// temp(C) = (Vsense - V25) / Avg_slope + 25
+	// Avg_slope = 2.5mV/C
+	// V25 = 0.76V
+	uint16_t temp_c;
+
+	temp_c = ((this->temp - 0.76) / 0.0025) + 25;
+	
+	return temp_c;
 }
 
 } // namespace adc_temp 
@@ -91,7 +112,7 @@ void HAL_ADC_MspInit (ADC_HandleTypeDef* hadc) {
 	// init DMAx CLK, 2 streams, link DMA HAndle, set priority and enable transfer
 	// complete IT on the 2 streams. 
 	// config DMAx 
-	ADCx_DMA_CLK_ENABLE()
+	ADCx_DMA_CLK_ENABLE();
 
 	DMAx_Handle.Instance = ADCx_DMA_STREAM;
 	DMAx_Handle.Init.Channel = ADCx_DMA_CHANNEL;
@@ -113,11 +134,11 @@ void HAL_ADC_MspInit (ADC_HandleTypeDef* hadc) {
 	}
 
 	// link DMA handle to ADC Handle
-	__HAL_LINKDMA(hadc, DMA_Handle, DMAx_Handle)
+	__HAL_LINKDMA(hadc, DMA_Handle, DMAx_Handle);
 
 	// NVIC for DMA transvfer complete IT
-	HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+	HAL_NVIC_SetPriority(ADCx_DMA_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(ADCx_DMA_IRQn);
 }
 
 #ifdef __cplusplus

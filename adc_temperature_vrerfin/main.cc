@@ -28,10 +28,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-using namespace std;
-using namespace led_rgb;
-using namespace system;
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define CHANGE_COLOR_DELAY 10
@@ -40,21 +36,24 @@ using namespace system;
 /* Private variables ---------------------------------------------------------*/
 System sys;
 
-// RGB LED interface pin connection:
-// PWM mode
-// RED - PC6
-// GREEN - PC8
-// BLUS - PC9
-LedRgb led_rgb_pixel;
-
 // STM32F407 temperature sensor 
 AdcTemp tempsensor;
+
+// LCD interface pin connection:
+// 4 - RS 		GPIO_PIN_7
+// 5 - R/W		GPIO_PIN_8
+// 6 - EN 		GPIO_PIN_9
+// 11 - DB4		GPIO_PIN_10
+// 12 - DB5		GPIO_PIN_11
+// 13 - DB6		GPIO_PIN_12
+// 14 - DB7		GPIO_PIN_13
+Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GPIO_PIN_12, GPIO_PIN_13);
 
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __cplusplus
  extern "C" {
 #endif 
-void Init (void);
+void init (void);
 
 #ifdef __cplusplus
 }
@@ -63,88 +62,23 @@ void Init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	uint16_t red = 0;
-	uint16_t green = 0;
-	uint16_t blue = 0;
+	uint16_t temp_c;
+	init ();
 
-	Init ();
+	temp_c = tempsensor.getTemp();
 
   /* Infinite loop */
-	// all the color panel
-	//  fadin blue
-	led_rgb_pixel.On (BLUE);
-	for (blue = 0; blue < 256; blue++) {
-		led_rgb_pixel.SetColorIntensity (BLUE, 255 - blue);
-		HAL_Delay (CHANGE_COLOR_DELAY);
-		//+ if (blue > 128) blue++;
-	}
-	while (1) {
-		//  fadin green --blue
-		led_rgb_pixel.On (GREEN);
-		for (green = 0; green < 256; green++) {
-			led_rgb_pixel.SetColorIntensity (GREEN, 255 - green);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (green > 128) green++;
-		}
-		//  fadout blue --green
-		for (blue = 0; blue < 256; blue++) {
-			led_rgb_pixel.SetColorIntensity (BLUE, blue);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (blue < 128) blue++;
-		}
-		led_rgb_pixel.Off (BLUE);
-		//  fadin red --green
-		led_rgb_pixel.On (RED);
-		for (red = 0; red < 256; red++) {
-			led_rgb_pixel.SetColorIntensity (RED, 255 - red);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (red > 128) red++;
-		}
-		//  fadout green --red
-		for (green = 0; green < 256; green++) {
-			led_rgb_pixel.SetColorIntensity (GREEN, green);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (green < 128) green++;
-		}
-		led_rgb_pixel.Off (GREEN);
-		//  fadin blue --red
-		led_rgb_pixel.On (BLUE);
-		for (blue = 0; blue < 256; blue++) {
-			led_rgb_pixel.SetColorIntensity (BLUE, 255 - blue);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (blue > 128) blue++;
-		}
-		//  fadin green --blue--red
-		led_rgb_pixel.On (GREEN);
-		for (green = 0; green < 256; green++) {
-			led_rgb_pixel.SetColorIntensity (GREEN, 255 - green);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (green > 128) green++;
-		}
-		// fadout red --blue
-		for (red = 0; red < 256; red++) {
-			led_rgb_pixel.SetColorIntensity (RED, red);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (red < 128) red++;
-		}
-		led_rgb_pixel.Off (RED);
-		//  fadout green --blue
-		for (green = 0; green < 256; green++) {
-			led_rgb_pixel.SetColorIntensity (GREEN, green);
-			HAL_Delay (CHANGE_COLOR_DELAY);
-			//+ if (green < 128) green++;
-		}
-		led_rgb_pixel.Off (GREEN);
-	}
+	while (1);
 }
 #ifdef __cplusplus
  extern "C" {
 #endif 
 
-void Init (void) {
-	sys.Init ();
+void init (void) {
+	sys.init ();
+	lcd.init ();
+	tempsensor.init ();
   BSP_LED_Init(LED3); //orange
-	led_rgb_pixel.Init ();
 }
 
 #ifdef  USE_FULL_ASSERT

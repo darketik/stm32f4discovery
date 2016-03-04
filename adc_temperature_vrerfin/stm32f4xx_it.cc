@@ -26,7 +26,6 @@
 //
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
 #include "stm32f4xx_it.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,9 +40,6 @@ extern AdcTemp tempsensor;
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
-#ifdef __cplusplus
- extern "C" {
-#endif 
 
 /**
   * @brief   This function handles NMI exception.
@@ -162,8 +158,4 @@ void ADCx_DMA_IRQHandler(void)
 {
 	HAL_DMA_IRQHandler(tempsensor.getAdcHandle()->DMA_Handle);
 }
-
-#ifdef __cplusplus
-}
-#endif
 

@@ -31,8 +31,8 @@ F_CRYSTAL      			= 8000000L
 #+ APPLICATION    			= FALSE
 
 # Packages to build
-TARGET         			= led_rgb_pwm_driver
-PACKAGES						= led_rgb_pwm_driver
+TARGET         			= adc_temperature_vrerfin
+PACKAGES						= adc_temperature_vrerfin
 
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
