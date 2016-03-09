@@ -31,8 +31,8 @@ F_CRYSTAL      			= 8000000L
 #+ APPLICATION    			= FALSE
 
 # Packages to build
-TARGET         			= adc_temperature_vrerfin
-PACKAGES						= adc_temperature_vrerfin
+TARGET         			= adc_temperature_vrefin
+PACKAGES						= adc_temperature_vrefin
 
 # project options
 NEWLIB_NANO					= disable
