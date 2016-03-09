@@ -86,15 +86,26 @@ ADC_HandleTypeDef * AdcTemp::getAdcHandle (void) {
 	return &(this->ADCx_Handle);
 }
 
-uint16_t AdcTemp::getTemp(void) {
+q15_t AdcTemp::getTemp(void) {
 	// temp(C) = (Vsense - V25) / Avg_slope + 25
-	// Avg_slope = 2.5mV/C
-	// V25 = 0.76V
-	uint16_t temp_c;
+	// Vsense is in mV
+	// Avg_slope = 25mV/C (they say 2.5mV/C in datasheet, i think its wrong)
+	// V25 = 0.76V 
+	float temp_c;
+	q15_t temp_c_int;
+	float vsense;
+	const static float avg_slope = 25;
+	const static float v_25 = 0.76;
+	const static float v_powersupply = 3000;
+	const static float adc_max_value_12b = 0xfff;
 
-	temp_c = ((this->temp - 0.76) / 0.0025) + 25;
+	// transform adc measured 12b int value into volt
+	vsense = (((float)(this->temp) * v_powersupply) / adc_max_value_12b) / 1000 ;
+	// apply temperature in C formula
+	temp_c = ((vsense - v_25) / avg_slope) + 25;
+	arm_float_to_q15(&temp_c, &temp_c_int, 1);
 	
-	return temp_c;
+	return temp_c_int;
 }
 
 } // namespace adc_temp 

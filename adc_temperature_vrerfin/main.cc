@@ -62,11 +62,16 @@ void init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	uint16_t temp_c;
+	char str_temp_c[16];
+	q15_t temp_c;
 	init ();
 
 	temp_c = tempsensor.getTemp();
-
+	//+ itoa((int)temp_c, str_temp_c, 10);
+	sprintf(str_temp_c, "%d", temp_c);
+	lcd.Print(str_temp_c);
+	//+ lcd.Print((char*)&temp_c);
+	
   /* Infinite loop */
 	while (1);
 }

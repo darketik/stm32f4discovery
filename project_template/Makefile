@@ -34,6 +34,10 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= project_template
 PACKAGES						= project_template
 
+# project options
+NEWLIB_NANO					= enable
+SEMIHOST						= disable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
 

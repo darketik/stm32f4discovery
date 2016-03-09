@@ -34,6 +34,10 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= adc_temperature_vrerfin
 PACKAGES						= adc_temperature_vrerfin
 
+# project options
+NEWLIB_NANO					= disable
+SEMIHOST						= disable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
 

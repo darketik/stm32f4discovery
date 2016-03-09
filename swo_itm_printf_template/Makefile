@@ -34,6 +34,10 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= swo_itm_printf_template
 PACKAGES						= swo_itm_printf_template
 
+# project options
+NEWLIB_NANO					= enable
+SEMIHOST						= disable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
 

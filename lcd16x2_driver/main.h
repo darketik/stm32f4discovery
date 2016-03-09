@@ -30,13 +30,8 @@
 #define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-#include "stm32f4_discovery.h"
-#include "stm32f4xx_it.h"
 #include "libstm32f4.h"
-
-#include "system.h"
-#include "lcd16x2.h"
+#include "stm32f4xx_it.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

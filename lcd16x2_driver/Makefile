@@ -34,6 +34,10 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= lcd16x2_driver
 PACKAGES						= lcd16x2_driver
 
+# project options
+NEWLIB_NANO					= enable
+SEMIHOST						= disable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
 

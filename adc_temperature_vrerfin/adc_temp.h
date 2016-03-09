@@ -37,6 +37,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "libstm32f4.h"
+#include "arm_math.h"
 #include "system.h"
 
 namespace adc_temp {
@@ -58,7 +59,7 @@ class AdcTemp {
 
 		void init (void);
 		ADC_HandleTypeDef * getAdcHandle(void);
-		uint16_t getTemp(void);
+		q15_t getTemp(void);
 		
 	private:
 		uint16_t temp;

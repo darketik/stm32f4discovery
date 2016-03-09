@@ -34,9 +34,11 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= semihosting_template
 PACKAGES						= semihosting_template
 
+# project options
+NEWLIB_NANO					= enable
+SEMIHOST						= enable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
-
-SEMIHOST							= enable
 
 include libstm32f4/makefile.inc

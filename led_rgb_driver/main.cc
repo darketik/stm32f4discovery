@@ -28,10 +28,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-using namespace std;
-using namespace led_rgb;
-using namespace system;
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define CHANGE_COLOR_DELAY 500

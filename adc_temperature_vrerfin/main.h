@@ -30,25 +30,16 @@
 #define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-#include "stm32f4_discovery.h"
-#include "stm32f4xx_it.h"
 #include "libstm32f4.h"
+#include "stm32f4xx_it.h"
 
-#include "system.h"
-#include "adc_temp.h"
-#include "lcd16x2.h"
-
-using namespace std;
-using namespace adc_temp;
-using namespace lcd16x2;
-using namespace system;
+#include <stdlib.h>
+#include <stdio.h>
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-
 
 #endif /* __MAIN_H */
 

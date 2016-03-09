@@ -34,6 +34,10 @@ F_CRYSTAL      			= 8000000L
 TARGET         			= ledtoggle_template
 PACKAGES						= ledtoggle_template
 
+# project options
+NEWLIB_NANO					= enable
+SEMIHOST						= disable
+
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag
 
