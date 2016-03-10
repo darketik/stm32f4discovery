@@ -31,7 +31,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "libstm32f4.h"
-#include "stm32f4xx_it.h"
 
 #include <stdlib.h>
 #include <stdio.h>
