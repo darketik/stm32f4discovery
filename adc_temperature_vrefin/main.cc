@@ -51,9 +51,9 @@ Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GP
 
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif 
-void init (void);
+    void init (void);
 
 #ifdef __cplusplus
 }
@@ -62,49 +62,53 @@ void init (void);
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-	char str_temp_c[16];
-	q15_t temp_c;
-	init ();
+  char str_temp_c[16];
+  q15_t temp_c;
+  init ();
+  BSP_LED_Toggle(LED3); //orange
+  printf("Measure chip temperature\n");
 
-	temp_c = tempsensor.getTemp();
-	//+ itoa((int)temp_c, str_temp_c, 10);
-	sprintf(str_temp_c, "%d", temp_c);
-	lcd.Print(str_temp_c);
-	//+ lcd.Print((char*)&temp_c);
-	
-  /* Infinite loop */
-	while (1);
-}
-#ifdef __cplusplus
- extern "C" {
-#endif 
-
-void init (void) {
-	sys.init ();
-	lcd.init ();
-	tempsensor.init ();
-  BSP_LED_Init(LED3); //orange
-}
-
-#ifdef  USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{  
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  temp_c = tempsensor.getTemp();
+  sprintf(str_temp_c, "%d", temp_c);
+  //+ lcd.Print(str_temp_c);
 
   /* Infinite loop */
-  while (1)
-  {
-		Error_Handler ();
+  while (1) {
+      printf("%s\n", str_temp_c);
+
+
   }
 }
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
+    void init (void) {
+	sys.init ();
+	//+ lcd.init ();
+	tempsensor.init ();
+	BSP_LED_Init(LED3); //orange
+    }
+
+#ifdef  USE_FULL_ASSERT
+    /**
+     * @brief  Reports the name of the source file and the source line number
+     *         where the assert_param error has occurred.
+     * @param  file: pointer to the source file name
+     * @param  line: assert_param error line source number
+     * @retval None
+     */
+    void assert_failed(uint8_t* file, uint32_t line)
+      {  
+	/* User can add his own implementation to report the file name and line number,
+ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+	/* Infinite loop */
+	while (1)
+	  {
+	    Error_Handler ();
+	  }
+      }
 #endif
 
 #ifdef __cplusplus
@@ -112,11 +116,11 @@ void assert_failed(uint8_t* file, uint32_t line)
 #endif
 
 /**
-  * @}
-  */ 
+ * @}
+ */ 
 
 /**
-  * @}
-  */ 
+ * @}
+ */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -35,8 +35,9 @@ TARGET         			= adc_temperature_vrefin
 PACKAGES						= adc_temperature_vrefin
 
 # project options
-NEWLIB_NANO					= disable
-SEMIHOST						= disable
+NEWLIB_NANO					= enable
+SEMIHOST						= enable
+NOSYS							= enable
 
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag

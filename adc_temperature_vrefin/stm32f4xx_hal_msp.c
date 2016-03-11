@@ -40,6 +40,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
+extern void initialise_monitor_handles(void);
+
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
   */
@@ -68,7 +70,7 @@
   */
 void HAL_MspInit(void)
 {
-
+	initialise_monitor_handles();
 }
 
 /**
