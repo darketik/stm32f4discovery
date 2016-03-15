@@ -37,7 +37,7 @@ PACKAGES						= adc_temperature_vrefin
 # project options
 NEWLIB_NANO					= enable
 SEMIHOST						= enable
-NOSYS							= enable
+NOSYS								= enable
 
 # preferred upload commmand
 UPLOAD_COMMAND			= upload_jtag

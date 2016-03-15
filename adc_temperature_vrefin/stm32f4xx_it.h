@@ -29,9 +29,11 @@
 #ifndef __STM32F4xx_IT_H
 #define __STM32F4xx_IT_H
 
-/* Includes ------------------------------------------------------------------*/
-#include "libstm32f4.h"
+#ifdef __cplusplus
+extern "C" {
+#endif 
 
+/* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -47,6 +49,10 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 void ADCx_DMA_IRQHandler(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __STM32F4xx_IT_H */
 

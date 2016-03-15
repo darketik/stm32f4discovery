@@ -54,7 +54,8 @@ Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GP
 extern "C" {
 #endif 
     void init (void);
-
+    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle);
+    void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc);
 #ifdef __cplusplus
 }
 #endif
@@ -62,21 +63,24 @@ extern "C" {
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-  char str_temp_c[16];
+  //+ char str_temp_c[16];
   q15_t temp_c;
+  uint16_t temp_adc;
   init ();
   BSP_LED_Toggle(LED3); //orange
   printf("Measure chip temperature\n");
 
-  temp_c = tempsensor.getTemp();
-  sprintf(str_temp_c, "%d", temp_c);
+  //+ sprintf(str_temp_c, "%d", temp_c);
   //+ lcd.Print(str_temp_c);
 
   /* Infinite loop */
   while (1) {
-      printf("%s\n", str_temp_c);
-
-
+      temp_c = tempsensor.getTemp();
+      temp_adc = tempsensor.getAdcValue();
+      //+ printf("%s\n", str_temp_c);
+      printf("%d\n", temp_c);
+      printf("%d\n", temp_adc);
+      //+ HAL_Delay(50);
   }
 }
 #ifdef __cplusplus
@@ -88,7 +92,20 @@ extern "C" {
 	//+ lcd.init ();
 	tempsensor.init ();
 	BSP_LED_Init(LED3); //orange
+	BSP_LED_Init(LED5); //red
+	BSP_LED_Init(LED4); //green
     }
+
+    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)
+      {
+	BSP_LED_On(LED5); //red
+      }
+
+
+    void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
+      {
+	BSP_LED_On(LED4); //green
+      }
 
 #ifdef  USE_FULL_ASSERT
     /**
