@@ -168,10 +168,4 @@ void ADCx_DMA_IRQHandler(void)
   HAL_DMA_IRQHandler (tempsensor.getAdcHandle()->DMA_Handle);
 }
 
-void ADCx_IRQHandler (void)
-{
-  HAL_ADC_IRQHandler (tempsensor.getAdcHandle());
-}
-
-
 

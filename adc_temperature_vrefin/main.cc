@@ -66,20 +66,21 @@ int main (void)
   //+ char str_temp_c[16];
   q15_t temp_c;
   uint16_t temp_adc;
+
   init ();
-  BSP_LED_Toggle(LED3); //orange
-  printf("Measure chip temperature\n");
+  BSP_LED_Toggle (LED3); //orange
+  printf ("Measure chip temperature\n");
 
   //+ sprintf(str_temp_c, "%d", temp_c);
   //+ lcd.Print(str_temp_c);
 
   /* Infinite loop */
   while (1) {
-      temp_c = tempsensor.getTemp();
-      temp_adc = tempsensor.getAdcValue();
+      temp_c = tempsensor.getTemp ();
+      temp_adc = tempsensor.getAdcValue ();
       //+ printf("%s\n", str_temp_c);
-      printf("%d\n", temp_c);
-      printf("%d\n", temp_adc);
+      printf ("%d\n", temp_c);
+      printf ("%d\n", temp_adc);
       //+ HAL_Delay(50);
   }
 }
@@ -91,20 +92,20 @@ extern "C" {
 	sys.init ();
 	//+ lcd.init ();
 	tempsensor.init ();
-	BSP_LED_Init(LED3); //orange
-	BSP_LED_Init(LED5); //red
-	BSP_LED_Init(LED4); //green
+	BSP_LED_Init (LED3); //orange
+	BSP_LED_Init (LED5); //red
+	BSP_LED_Init (LED4); //green
     }
 
     void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)
       {
-	BSP_LED_On(LED5); //red
+	BSP_LED_Toggle (LED4); //red
       }
 
 
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
       {
-	BSP_LED_On(LED4); //green
+	BSP_LED_Toggle (LED5); //green
       }
 
 #ifdef  USE_FULL_ASSERT
@@ -115,7 +116,7 @@ extern "C" {
      * @param  line: assert_param error line source number
      * @retval None
      */
-    void assert_failed(uint8_t* file, uint32_t line)
+    void assert_failed (uint8_t* file, uint32_t line)
       {  
 	/* User can add his own implementation to report the file name and line number,
 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
