@@ -99,8 +99,9 @@ extern "C" {
 	//+ lcd.init ();
 	tempsensor.init ();
 	BSP_LED_Init (LED3); //orange
-	BSP_LED_Init (LED5); //red
 	BSP_LED_Init (LED4); //green
+	BSP_LED_Init (LED5); //red
+	BSP_LED_Init (LED6); //blue
     }
 
     void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)
@@ -112,6 +113,12 @@ extern "C" {
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
       {
 	BSP_LED_Toggle (LED5); //red
+      }
+
+
+    void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+      {
+	BSP_LED_Toggle (LED6); //blue
       }
 
 #ifdef  USE_FULL_ASSERT
