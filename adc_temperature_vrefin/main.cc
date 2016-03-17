@@ -64,12 +64,13 @@ extern "C" {
 int main (void)
 {
   //+ char str_temp_c[16];
-  q15_t temp_c;
-  uint16_t temp_adc;
+  float32_t temp_c;
+  int temp_i, temp_q, temp_r;
+  uint32_t temp_adc;
 
   init ();
   BSP_LED_Toggle (LED3); //orange
-  printf ("Measure chip temperature\n");
+  printf ("Measure chip temperature:\n");
 
   //+ sprintf(str_temp_c, "%d", temp_c);
   //+ lcd.Print(str_temp_c);
@@ -78,10 +79,16 @@ int main (void)
   while (1) {
       temp_c = tempsensor.getTemp ();
       temp_adc = tempsensor.getAdcValue ();
-      //+ printf("%s\n", str_temp_c);
-      printf ("%d\n", temp_c);
-      printf ("%d\n", temp_adc);
-      //+ HAL_Delay(50);
+
+      // convert float to int with 2 decimals
+      temp_i = (int)(temp_c * 100.0f);
+      temp_q = temp_i / 100;
+      temp_r = temp_i % 100;
+      printf ("%d.%02d\n", temp_q, temp_r);
+      printf ("%d\n", (int)temp_adc);
+      HAL_Delay(500);
+      printf ("\033[A\033[2K\r");
+      printf ("\033[A\033[2K\r");
   }
 }
 #ifdef __cplusplus
