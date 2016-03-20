@@ -37,7 +37,10 @@
 System sys;
 
 // STM32F407 temperature sensor 
-AdcTemp tempsensor;
+AdcTempTimTrig tempsensor;
+
+// Timer 3 tick base generator at 5kHz to trig ADC conversions on TRGO event
+TimBase timer3 (TIM3, 84000000, 16800);
 
 // LCD interface pin connection:
 // 4 - RS 		GPIO_PIN_7
@@ -54,8 +57,9 @@ Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GP
 extern "C" {
 #endif 
     void init (void);
-    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle);
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc);
+    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle);
+    void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 #ifdef __cplusplus
 }
 #endif
@@ -86,8 +90,9 @@ int main (void)
       temp_r = temp_i % 100;
       printf ("%d.%02d\n", temp_q, temp_r);
       printf ("%d\n", (int)temp_adc);
-      HAL_Delay(500);
-      printf ("\033[A\033[2K\r\033[A\033[2K\r");
+      HAL_Delay(100);
+      printf ("\033[A\033[2K\r");
+      printf ("\033[A\033[2K\r");
   }
 }
 #ifdef __cplusplus
@@ -97,6 +102,7 @@ extern "C" {
     void init (void) {
 	sys.init ();
 	//+ lcd.init ();
+	timer3.init ();
 	tempsensor.init ();
 	BSP_LED_Init (LED3); //orange
 	BSP_LED_Init (LED4); //green
@@ -108,7 +114,6 @@ extern "C" {
       {
 	BSP_LED_Toggle (LED4); //green
       }
-
 
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
       {

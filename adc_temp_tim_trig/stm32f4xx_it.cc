@@ -34,6 +34,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern AdcTemp tempsensor;
+extern TimBase timer3;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -163,9 +164,14 @@ void SysTick_Handler(void)
 /*void PPP_IRQHandler(void)
   {
   }*/
-void ADCx_DMA_IRQHandler(void)
+void ADCx_DMA_IRQHandler (void)
 {
   HAL_DMA_IRQHandler (tempsensor.getAdcHandle()->DMA_Handle);
+}
+
+void TIMx_IRQHandler (void)
+{
+  HAL_TIM_IRQHandler (timer3.getHandle());
 }
 
 
