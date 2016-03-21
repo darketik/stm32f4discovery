@@ -59,7 +59,7 @@ extern "C" {
     void init (void);
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc);
     void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle);
-    void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
+    void HAL_TIM_PeriodElapsedCallback (TIM_HandleTypeDef *htim);
 #ifdef __cplusplus
 }
 #endif
@@ -67,32 +67,32 @@ extern "C" {
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-  //+ char str_temp_c[16];
+  char str_temp_c[6];
   float32_t temp_c;
   int temp_i, temp_q, temp_r;
-  uint32_t temp_adc;
+  //+ uint32_t temp_adc;
 
   init ();
   BSP_LED_Toggle (LED3); //orange
-  printf ("Measure chip temperature:\n");
+  lcd.Print ("Chip temp =");
+  lcd.PrintXY ("C", 6, 1);
 
-  //+ sprintf(str_temp_c, "%d", temp_c);
-  //+ lcd.Print(str_temp_c);
 
   /* Infinite loop */
   while (1) {
       temp_c = tempsensor.getTemp ();
-      temp_adc = tempsensor.getAdcValue ();
+      //+ temp_adc = tempsensor.getAdcValue ();
+      //+ sprintf (str_temp_c, "%d", (int)temp_adc);
 
       // convert float to int with 2 decimals
       temp_i = (int)(temp_c * 100.0f);
       temp_q = temp_i / 100;
       temp_r = temp_i % 100;
-      printf ("%d.%02d\n", temp_q, temp_r);
-      printf ("%d\n", (int)temp_adc);
-      HAL_Delay(100);
-      printf ("\033[A\033[2K\r");
-      printf ("\033[A\033[2K\r");
+      sprintf (str_temp_c, "%3d.%02d", temp_q, temp_r);
+      lcd.PrintXY (str_temp_c, 0, 1);
+      HAL_Delay (100);
+      //+ printf ("\033[A\033[2K\r");
+      //+ printf ("\033[A\033[2K\r");
   }
 }
 #ifdef __cplusplus
@@ -101,7 +101,7 @@ extern "C" {
 
     void init (void) {
 	sys.init ();
-	//+ lcd.init ();
+	lcd.init ();
 	timer3.init ();
 	tempsensor.init ();
 	BSP_LED_Init (LED3); //orange
@@ -112,7 +112,7 @@ extern "C" {
 
     void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)
       {
-	BSP_LED_Toggle (LED4); //green
+	//+ BSP_LED_Toggle (LED4); //green
       }
 
     void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
@@ -123,7 +123,7 @@ extern "C" {
 
     void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       {
-	BSP_LED_Toggle (LED6); //blue
+	//+ BSP_LED_Toggle (LED6); //blue
       }
 
 #ifdef  USE_FULL_ASSERT

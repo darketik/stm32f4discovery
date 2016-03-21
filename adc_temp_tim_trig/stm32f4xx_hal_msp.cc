@@ -60,7 +60,7 @@
 extern "C" {
 #endif 
 
-extern void initialise_monitor_handles(void);
+//+ extern void initialise_monitor_handles(void);
 /** @defgroup HAL_MSP_Private_Functions HAL MSP Private Functions
  * @{
  */
@@ -73,7 +73,7 @@ extern void initialise_monitor_handles(void);
  */
 void HAL_MspInit(void)
 {
-  initialise_monitor_handles();
+  //+ initialise_monitor_handles();
 }
 
 /**

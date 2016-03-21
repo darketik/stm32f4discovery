@@ -36,7 +36,7 @@ PACKAGES						= adc_temp_tim_trig
 
 # project options
 NEWLIB_NANO					= enable
-SEMIHOST						= enable
+SEMIHOST						= disable
 NOSYS								= enable
 
 # preferred upload commmand
