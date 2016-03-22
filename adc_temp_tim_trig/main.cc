@@ -91,8 +91,6 @@ int main (void)
       sprintf (str_temp_c, "%3d.%02d", temp_q, temp_r);
       lcd.PrintXY (str_temp_c, 0, 1);
       HAL_Delay (100);
-      //+ printf ("\033[A\033[2K\r");
-      //+ printf ("\033[A\033[2K\r");
   }
 }
 #ifdef __cplusplus

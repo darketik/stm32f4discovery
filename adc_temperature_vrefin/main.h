@@ -31,6 +31,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "libstm32f4.h"
+#include "adc_temp.h"
+#include "tim_base.h"
+
+using namespace adc_temp;
+using namespace tim_base;
 
 #include <stdlib.h>
 #include <stdio.h>

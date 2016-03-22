@@ -33,7 +33,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern AdcTempTimTrig tempsensor;
+extern AdcPotTimTrig potsensor;
 extern TimBase timer3;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -166,7 +166,7 @@ void SysTick_Handler(void)
   }*/
 void ADCx_DMA_IRQHandler (void)
 {
-  HAL_DMA_IRQHandler (tempsensor.getAdcHandle()->DMA_Handle);
+  HAL_DMA_IRQHandler (potsensor.getAdcHandle()->DMA_Handle);
 }
 
 void TIMx_IRQHandler (void)

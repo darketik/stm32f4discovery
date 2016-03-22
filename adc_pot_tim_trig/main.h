@@ -31,9 +31,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "libstm32f4.h"
+#include "adc_pot_tim_trig.h"
+#include "tim_base.h"
 #include "lcd16x2.h"
 
+using namespace adc_pot_tim_trig;
+using namespace tim_base;
 using namespace lcd16x2;
+
+#include <stdlib.h>
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
