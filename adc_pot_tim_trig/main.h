@@ -44,6 +44,8 @@ using namespace lcd16x2;
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define ADCx_DMA_IRQHandler	DMA2_Stream0_IRQHandler
+
 /* Exported functions ------------------------------------------------------- */
 
 #endif /* __MAIN_H */

@@ -24,36 +24,26 @@
 //
 // -----------------------------------------------------------------------------
 //
-
+  
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F4xx_IT_H
-#define __STM32F4xx_IT_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif 
+#ifndef __MAIN_H
+#define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "libstm32f4.h"
+#include "quad_encoder.h"
+#include "lcd16x2.h"
+
+using namespace quad_encoder;
+using namespace lcd16x2;
+
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define QUAD_ENCODER_TIMx_IRQHandler 		TIM3_IRQHandler
+#define QUAD_ENCODER_DMAx_Stream_Ic1_IRQHandler	DMA1_Stream4_IRQHandler
+#define QUAD_ENCODER_DMAx_Stream_Ic2_IRQHandler	DMA1_Stream5_IRQHandler
 /* Exported functions ------------------------------------------------------- */
 
-void NMI_Handler(void);
-void HardFault_Handler(void);
-void MemManage_Handler(void);
-void BusFault_Handler(void);
-void UsageFault_Handler(void);
-void SVC_Handler(void);
-void DebugMon_Handler(void);
-void PendSV_Handler(void);
-void SysTick_Handler(void);
-void ADCx_DMA_IRQHandler(void);
+#endif /* __MAIN_H */
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __STM32F4xx_IT_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

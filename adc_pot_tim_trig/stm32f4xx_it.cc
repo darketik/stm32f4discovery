@@ -169,9 +169,3 @@ void ADCx_DMA_IRQHandler (void)
   HAL_DMA_IRQHandler (potsensor.getAdcHandle()->DMA_Handle);
 }
 
-void TIMx_IRQHandler (void)
-{
-  HAL_TIM_IRQHandler (timer3.getHandle());
-}
-
-

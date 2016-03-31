@@ -30,27 +30,32 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define CHANGE_COLOR_DELAY 10
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 System sys;
 
-// pot sensor with 5V supply
-AdcPotTimTrig potsensor (ADC1,
-			 ADC_CHANNEL_11,
-			 ADC_EXTERNALTRIGCONV_T3_TRGO,
-			 ADC_SAMPLETIME_112CYCLES,
-			 DMA2,
-			 DMA2_Stream0,
-			 DMA_CHANNEL_0,
-			 DMA2_Stream0_IRQn,
-			 GPIOC,
-			 GPIO_PIN_1,
-			 3000.0f);
-
-// Timer 3 tick base generator at 5kHz to trig ADC conversions on TRGO event
-TimBase timer3 (TIM3, 84000000, 16800);
+// quadratic encoder with:
+// PB6: TIM4 ch1
+// PB7: TIM4 ch2
+// PA14: TIM2 CH1
+// PB3:  TIM2 CH2
+// PB4: TIM3 CH1
+// PB5: TIM3 CH2
+DMA_Stream_TypeDef * dma_stream [2] = {DMA1_Stream4, DMA1_Stream5};
+uint32_t dma_channel [2] = {DMA_CHANNEL_5, DMA_CHANNEL_5};
+IRQn_Type dma_irqn [2] = {DMA1_Stream4_IRQn, DMA1_Stream5_IRQn};
+QuadEncoder q_enc (GPIOB, 
+		   GPIO_PIN_4,
+		   GPIO_PIN_5,
+		   GPIO_AF2_TIM3,		   
+		   DMA1,
+		   dma_stream,
+		   dma_channel,
+		   dma_irqn,
+		   TIM3,
+		   0x10000,
+		   1000000,
+		   TIM3_IRQn);
 
 // LCD interface pin connection:
 // 4 - RS 		GPIO_PIN_7
@@ -67,8 +72,7 @@ Lcd lcd (GPIOE, GPIO_PIN_7, GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11, GP
 extern "C" {
 #endif 
     void init (void);
-    void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc);
-    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle);
+
 #ifdef __cplusplus
 }
 #endif
@@ -76,34 +80,24 @@ extern "C" {
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-  char str_value_v[4];
-  float32_t value_v;
-  int value_i, value_q, value_r;
-  //+ uint32_t value_adc;
-
+  uint16_t tim_cnt;
+  char str_tim_cnt[5];
   init ();
-  BSP_LED_Toggle (LED3); //orange
-  lcd.Print ("Pot voltage =");
-  lcd.PrintXY ("V", 4, 1);
-
+  lcd.Print ("Quad Encoder =");
 
   /* Infinite loop */
   while (1) {
-      value_v = potsensor.getVoltage ();
-      //+ value_adc = potsensor.getAdcValue ();
-      //+ sprintf (str_value_v, "%d", (int)value_adc);
-
-      // convert float to int with 2 decimals
-      value_i = (int)(value_v * 100.0f);
-      value_q = value_i / 100;
-      value_r = value_i % 100;
-      sprintf (str_value_v, "%1d.%02d", value_q, value_r);
-      lcd.PrintXY (str_value_v, 0, 1);
-      HAL_Delay (100);
-      //+ printf ("\033[A\033[2K\r");
-      //+ printf ("\033[A\033[2K\r");
+      tim_cnt = (uint16_t)(q_enc.getCounter ());
+      sprintf (str_tim_cnt, "%05d", tim_cnt);
+      lcd.PrintXY (str_tim_cnt, 0, 1);
+      //+ HAL_Delay (100);
+      //+ BSP_LED_Toggle (LED6); //blue
   }
-}
+}	
+
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif 
@@ -115,20 +109,20 @@ extern "C" {
 	BSP_LED_Init (LED5); //red
 	BSP_LED_Init (LED6); //blue
 	lcd.init ();
-	timer3.init ();
-	potsensor.init ();
+	q_enc.init ();
+	BSP_LED_Toggle (LED3); //orange
     }
 
-    void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)
-      {
-	//+ BSP_LED_Toggle (LED4); //green
-      }
 
-    void HAL_ADC_ErrorCallback (ADC_HandleTypeDef *hadc)
-      {
+
+    void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+	BSP_LED_Toggle (LED4); //green
+    }
+
+
+    void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim) {
 	BSP_LED_Toggle (LED5); //red
-      }
-
+    }
 
 #ifdef  USE_FULL_ASSERT
     /**
@@ -138,7 +132,7 @@ extern "C" {
      * @param  line: assert_param error line source number
      * @retval None
      */
-    void assert_failed (uint8_t* file, uint32_t line)
+    void assert_failed(uint8_t* file, uint32_t line)
       {  
 	/* User can add his own implementation to report the file name and line number,
 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
@@ -151,16 +145,13 @@ ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
       }
 #endif
 
+
+
+
+
+
+
 #ifdef __cplusplus
 }
 #endif
 
-/**
- * @}
- */ 
-
-/**
- * @}
- */ 
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

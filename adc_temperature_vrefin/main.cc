@@ -37,7 +37,13 @@
 System sys;
 
 // STM32F407 temperature sensor 
-AdcTemp tempsensor;
+AdcTemp tempsensor (ADC1, 
+		    ADC_CHANNEL_TEMPSENSOR, 
+		    ADC_SAMPLETIME_112CYCLES,
+		    DMA2,
+		    DMA2_Stream0,
+		    DMA_CHANNEL_0,
+		    DMA2_Stream0_IRQn);
 
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __cplusplus
@@ -82,10 +88,10 @@ extern "C" {
 
     void init (void) {
 	sys.init ();
-	tempsensor.init ();
 	BSP_LED_Init (LED3); //orange
 	BSP_LED_Init (LED5); //red
 	BSP_LED_Init (LED4); //green
+	tempsensor.init ();
     }
 
     void HAL_ADC_ConvCpltCallback (ADC_HandleTypeDef* AdcHandle)

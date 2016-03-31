@@ -175,15 +175,6 @@ void SysTick_Handler(void)
 }*/
 
 /**
-  * @brief  This function handles External line 0 interrupt request.
-  * @param  None
-  * @retval None
-  */
-void EXTI0_IRQHandler(void)
-{
-}
-
-/**
   * @}
   */ 
 

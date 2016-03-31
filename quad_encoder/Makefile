@@ -22,35 +22,24 @@
 #
 # See http://creativecommons.org/licenses/MIT/ for more information.
 
-PROJECTS = \
-			 quad_encoder \
-			 adc_temperature_vrefin \
-			 adc_temp_tim_trig \
-			 adc_pot_tim_trig \
-			 lcd16x2_driver \
-			 led_rgb_driver \
-			 led_rgb_pwm_driver \
-			 ledtoggle_template \
-			 project_template \
-			 semihosting_template \
-			 swo_itm_printf_template
 
-.PHONY: all_prj
-all_prj:
-	@$(foreach prj, $(PROJECTS), make -f $(prj)/Makefile all;)
+# System specifications
+F_CRYSTAL      			= 8000000L
+#+ F_CPU          			= 72000000L
+#+ SYSCLOCK       			= SYSCLK_FREQ_72MHz
 
-.PHONY: clean_prj
-clean_prj:
-	@rm -rf build
-	@make clean clean_libs
+#+ APPLICATION    			= FALSE
 
-PACKAGES						= dummy_for_libs
-TARGET						  = dummy_for_libs
+# Packages to build
+TARGET         			= quad_encoder
+PACKAGES						= quad_encoder
+
+# project options
 NEWLIB_NANO					= enable
 SEMIHOST						= disable
-F_CRYSTAL      			= 8000000L
+NOSYS								= enable
+
+# preferred upload commmand
+UPLOAD_COMMAND			= upload_jtag
 
 include libstm32f4/makefile.inc
-
-			 
-

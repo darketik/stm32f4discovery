@@ -29,8 +29,10 @@
 #ifndef __STM32F4xx_IT_H
 #define __STM32F4xx_IT_H
 
+#include "main.h"
+
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif 
 
 /* Includes ------------------------------------------------------------------*/
@@ -48,7 +50,9 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void ADCx_DMA_IRQHandler(void);
+void QUAD_ENCODER_TIMx_IRQHandler(void);
+void QUAD_ENCODER_DMAx_Stream_Ic1_IRQHandler(void);
+void QUAD_ENCODER_DMAx_Stream_Ic2_IRQHandler(void);
 
 #ifdef __cplusplus
 }
