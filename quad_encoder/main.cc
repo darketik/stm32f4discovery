@@ -54,7 +54,7 @@ QuadEncoder q_enc (GPIOB,
 		   dma_irqn,
 		   TIM3,
 		   0x10000,
-		   1000000,
+		   84000000,
 		   TIM3_IRQn);
 
 // LCD interface pin connection:
@@ -80,16 +80,14 @@ extern "C" {
 /* Private functions ---------------------------------------------------------*/
 int main (void)
 {
-  uint16_t tim_cnt;
-  char str_tim_cnt[5];
   init ();
   lcd.Print ("Quad Encoder =");
 
   /* Infinite loop */
   while (1) {
-      tim_cnt = (uint16_t)(q_enc.getCounter ());
-      sprintf (str_tim_cnt, "%05d", tim_cnt);
-      lcd.PrintXY (str_tim_cnt, 0, 1);
+      //+ tim_cnt = (uint16_t)(q_enc.getCounter ());
+      //+ sprintf (str_tim_cnt, "%05d", tim_cnt);
+      //+ lcd.PrintXY (str_tim_cnt, 0, 1);
       //+ HAL_Delay (100);
       //+ BSP_LED_Toggle (LED6); //blue
   }
@@ -116,7 +114,12 @@ extern "C" {
 
 
     void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+	uint16_t tim_cnt;
+	char str_tim_cnt[5];
 	BSP_LED_Toggle (LED4); //green
+	tim_cnt = (uint16_t)(q_enc.getCounter ());
+	sprintf (str_tim_cnt, "%05d", tim_cnt);
+	lcd.PrintXY (str_tim_cnt, 0, 1);
     }
 
 
