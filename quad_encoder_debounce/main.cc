@@ -41,21 +41,17 @@ System sys;
 // PB3:  TIM2 CH2
 // PB4: TIM3 CH1
 // PB5: TIM3 CH2
-DMA_Stream_TypeDef * dma_stream [2] = {DMA1_Stream4, DMA1_Stream5};
-uint32_t dma_channel [2] = {DMA_CHANNEL_5, DMA_CHANNEL_5};
-IRQn_Type dma_irqn [2] = {DMA1_Stream4_IRQn, DMA1_Stream5_IRQn};
 QuadEncoder q_enc (GPIOB, 
 		   GPIO_PIN_4,
 		   GPIO_PIN_5,
 		   GPIO_AF2_TIM3,		   
 		   DMA1,
-		   dma_stream,
-		   dma_channel,
-		   dma_irqn,
+		   DMA1_Stream4,
+		   DMA_CHANNEL_5,
+		   DMA1_Stream4_IRQn,
 		   TIM3,
 		   0x10000,
-		   84000000,
-		   TIM3_IRQn);
+		   84000000);
 
 // LCD interface pin connection:
 // 4 - RS 		GPIO_PIN_7

@@ -50,9 +50,7 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void QUAD_ENCODER_TIMx_IRQHandler(void);
 void QUAD_ENCODER_DMAx_Stream_Ic1_IRQHandler(void);
-void QUAD_ENCODER_DMAx_Stream_Ic2_IRQHandler(void);
 
 #ifdef __cplusplus
 }

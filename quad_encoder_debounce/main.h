@@ -40,9 +40,7 @@ using namespace lcd16x2;
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-#define QUAD_ENCODER_TIMx_IRQHandler 		TIM3_IRQHandler
 #define QUAD_ENCODER_DMAx_Stream_Ic1_IRQHandler	DMA1_Stream4_IRQHandler
-#define QUAD_ENCODER_DMAx_Stream_Ic2_IRQHandler	DMA1_Stream5_IRQHandler
 /* Exported functions ------------------------------------------------------- */
 
 #endif /* __MAIN_H */

@@ -152,19 +152,8 @@ void SysTick_Handler(void)
   */
 extern QuadEncoder q_enc; 
 
-void QUAD_ENCODER_TIMx_IRQHandler (void)
-{
-  HAL_TIM_IRQHandler (q_enc.getTimHandle ());
-}
-
 void QUAD_ENCODER_DMAx_Stream_Ic1_IRQHandler (void)
 {
   HAL_DMA_IRQHandler (q_enc.getTimHandle ()->hdma[TIM_DMA_ID_CC1]);
 }
-
-void QUAD_ENCODER_DMAx_Stream_Ic2_IRQHandler (void)
-{
-  HAL_DMA_IRQHandler (q_enc.getTimHandle ()->hdma[TIM_DMA_ID_CC2]);
-}
-
 
