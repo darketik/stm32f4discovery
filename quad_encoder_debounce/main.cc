@@ -84,13 +84,7 @@ int main (void)
   lcd.Print ("Quad Encoder =");
 
   /* Infinite loop */
-  while (1) {
-      //+ tim_cnt = (uint16_t)(q_enc.getCounter ());
-      //+ sprintf (str_tim_cnt, "%05d", tim_cnt);
-      //+ lcd.PrintXY (str_tim_cnt, 0, 1);
-      //+ HAL_Delay (100);
-      //+ BSP_LED_Toggle (LED6); //blue
-  }
+  while (1) { }
 }	
 
 
@@ -113,17 +107,17 @@ extern "C" {
 
 
 
-    void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-	uint16_t tim_cnt;
-	char str_tim_cnt[5];
-	BSP_LED_Toggle (LED4); //green
-	tim_cnt = (uint16_t)(q_enc.getCounter ());
-	sprintf (str_tim_cnt, "%05d", tim_cnt);
+    void HAL_TIM_IC_CaptureCallback (TIM_HandleTypeDef *htim) {
+	uint32_t _pos;
+	char str_tim_cnt[3];
+
+	_pos = q_enc.getPosition ();
+	sprintf (str_tim_cnt, "%03d", (uint16_t)_pos);
 	lcd.PrintXY (str_tim_cnt, 0, 1);
     }
 
 
-    void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim) {
+    void HAL_TIM_ErrorCallback (TIM_HandleTypeDef *htim) {
 	BSP_LED_Toggle (LED5); //red
     }
 
@@ -135,7 +129,7 @@ extern "C" {
      * @param  line: assert_param error line source number
      * @retval None
      */
-    void assert_failed(uint8_t* file, uint32_t line)
+    void assert_failed (uint8_t* file, uint32_t line)
       {  
 	/* User can add his own implementation to report the file name and line number,
 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

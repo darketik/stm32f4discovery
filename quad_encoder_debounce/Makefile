@@ -31,8 +31,8 @@ F_CRYSTAL      			= 8000000L
 #+ APPLICATION    			= FALSE
 
 # Packages to build
-TARGET         			= quad_encoder
-PACKAGES						= quad_encoder
+TARGET         			= quad_encoder_debounce
+PACKAGES						= quad_encoder_debounce
 
 # project options
 NEWLIB_NANO					= enable
